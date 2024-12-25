@@ -110,8 +110,7 @@ class YoutubePlayerController implements YoutubePlayerIFrameAPI {
   late final YoutubePlayerEventHandler _eventHandler;
   final Completer<void> _initCompleter = Completer();
 
-  final StreamController<YoutubePlayerValue> _valueController =
-      StreamController.broadcast();
+  final StreamController<YoutubePlayerValue> _valueController = StreamController.broadcast();
   YoutubePlayerValue _value = YoutubePlayerValue();
 
   /// A Stream of [YoutubePlayerValue], which allows you to subscribe to changes
@@ -383,8 +382,7 @@ class YoutubePlayerController implements YoutubePlayerIFrameAPI {
     if (trimWhitespaces) url = url.trim();
 
     const contentUrlPattern = r'^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?';
-    const embedUrlPattern =
-        r'^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/';
+    const embedUrlPattern = r'^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/';
     const altUrlPattern = r'^https:\/\/youtu\.be\/';
     const shortsUrlPattern = r'^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/';
     const musicUrlPattern = r'^https:\/\/(?:music\.)?youtube\.com\/watch\?';
@@ -465,9 +463,7 @@ class YoutubePlayerController implements YoutubePlayerIFrameAPI {
   Future<List<double>> get availablePlaybackRates async {
     final rates = await _evalWithResult('getAvailablePlaybackRates()');
 
-    return List<num>.from(jsonDecode(rates))
-        .map((r) => r.toDouble())
-        .toList(growable: false);
+    return List<num>.from(jsonDecode(rates)).map((r) => r.toDouble()).toList(growable: false);
   }
 
   @override
@@ -641,14 +637,12 @@ class YoutubePlayerController implements YoutubePlayerIFrameAPI {
     final path = uri.path;
 
     String? featureName;
-    if (host.contains('facebook') ||
-        host.contains('twitter') ||
-        host == 'youtu') {
+    if (host.contains('facebook') || host.contains('twitter') || host == 'youtu') {
       featureName = 'social';
     } else if (params.containsKey('feature')) {
       featureName = params['feature'];
-    } else if (path == '/watch') {
-      featureName = 'emb_info';
+    } else if (path == '/watch' || path.contains('/shorts')) {
+      featureName = 'emb_title';
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return NavigationDecision.navigate;
     }
